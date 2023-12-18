@@ -1,4 +1,5 @@
 const db = require("../models");
+const { sendMail } = require("./mailer.controller");
 const Item = db.items;
 const Op = db.Sequelize.Op;
 
@@ -23,6 +24,8 @@ exports.create = (req, res) => {
   // Save Item in the database
   Item.create(item)
     .then(data => {
+      // send email here
+      sendMail('recipient_email@example.com', 'Subject of your email', 'Content of your email');
       res.send(data);
     })
     .catch(err => {
@@ -53,8 +56,10 @@ exports.findAll = (req, res) => {
         amount: item.amount,
         description: item.description,
         date: item.date,
+        categoryId: item.categoryId,
         categoryName: item.category ? item.category.name : null // Access category name
       }));
+      
       console.log("itemsData: ",itemsData);
 
       res.send(itemsData);
